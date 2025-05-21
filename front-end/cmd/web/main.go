@@ -13,7 +13,7 @@ func main() {
 	})
 
 	fmt.Println("Starting front end service on port 4000")
-	err := http.ListenAndServe(":4000", nil)
+	err := http.ListenAndServe("0.0.0.0:4000", nil)
 	if err != nil {
 		log.Panic(err)
 	}
