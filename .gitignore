@@ -1,3 +1,5 @@
 .env
 brokerApp
 frontApp
+authApp
+projects/db-data
