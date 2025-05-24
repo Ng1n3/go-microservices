@@ -14,13 +14,12 @@ type jsonReponse struct {
 }
 
 type RequestPayload struct {
-	Action string `json:"action"`
-	Auth AuthPayload `json:"auth,omitempty"`
-
+	Action string      `json:"action"`
+	Auth   AuthPayload `json:"auth,omitempty"`
 }
 
 type AuthPayload struct {
-	Email string `json:"email"`
+	Email    string `json:"email"`
 	Password string `json:"password"`
 }
 
@@ -56,7 +55,7 @@ func (app *Config) authenticate(w http.ResponseWriter, authPayload AuthPayload) 
 	jsonData, _ := json.MarshalIndent(authPayload, "", "\t")
 
 	// call the service
-	request, err := http.NewRequest("POST", "http://authentication-service/authenticate", bytes.NewBuffer(jsonData))
+	request, err := http.NewRequest("POST", "http://authentication-service:3000/authenticate", bytes.NewBuffer(jsonData))
 	if err != nil {
 		app.errorJSON(w, err)
 		return
@@ -74,10 +73,11 @@ func (app *Config) authenticate(w http.ResponseWriter, authPayload AuthPayload) 
 	if response.StatusCode == http.StatusUnauthorized {
 		app.errorJSON(w, errors.New("invalid credentials"))
 		return
-	} else if response.StatusCode != http.StatusAccepted {
-		app.errorJSON(w, errors.New("error caling auth service"))
+	} else if response.StatusCode != http.StatusOK {
+		app.errorJSON(w, errors.New("error calling auth service"))
 		return
 	}
+
 
 	var jsonFromService jsonReponse
 
@@ -92,7 +92,7 @@ func (app *Config) authenticate(w http.ResponseWriter, authPayload AuthPayload) 
 		return
 	}
 
-	var payload jsonResponse 
+	var payload jsonResponse
 	payload.Error = false
 	payload.Message = "Authenticated!"
 	payload.Data = jsonFromService.Data
