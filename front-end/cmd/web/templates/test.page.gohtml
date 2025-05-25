@@ -8,6 +8,7 @@
                 <hr>
                 <a id="brokerBtn" class="btn btn-outline-secondary" href="javascript:void(0);">Test Broker</a>
                 <a id="authBrokerBtn" class="btn btn-outline-secondary" href="javascript:void(0);">Test Auth</a>
+                <a id="logBtn" class="btn btn-outline-secondary" href="javascript:void(0);">Test Log</a>
                 
                 <div id="output" class="mt-5" style="outline: 1px solid silver; padding: 2em;">
                     <span class="text-muted">Output shows here...</span>
@@ -35,6 +36,7 @@
     <script>
         let brokerBtn = document.getElementById("brokerBtn");
         let authBrokerBtn = document.getElementById("authBrokerBtn");
+        let logBtn = document.getElementById("logBtn");
         let output = document.getElementById("output");
         let sent = document.getElementById("payload");
         let received = document.getElementById("received");
@@ -61,6 +63,70 @@
             }
         })
 
+        authBrokerBtn.addEventListener("click", async function() {
+        const payload = {
+            action: "auth",
+            auth: {
+                email: "admin@example.com",
+                password: "verysecret"
+                }
+            };
+            try {
+            const response = await fetch("http:\/\/localhost:5000/handle", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(payload)
+            });
+
+             if(!response.ok) {
+                console.log(response); 
+                throw new Error(`HTTP error! status: ${response.status}`);
+             }
+
+             const data = await response.json();
+             sent.innerHTML = JSON.stringify(payload, null, 4);
+             received.innerHTML = JSON.stringify(data, null, 4);
+             output.innerHTML += `<br><strong>Response from broker service</strong>: ${data.message}`
+            } catch (error) {
+                console.error('Fetch error:', error);
+                output.innerHTML += `<br><br>Error: ${error.message}`;
+            }
+        })
+
+        logBtn.addEventListener("click", async function() {
+        const payload = {
+            action: "log",
+            log: {
+                name: "event",
+                data: "Some kind of data."
+                }
+            };
+            try {
+            const response = await fetch("http:\/\/localhost:5000/handle", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(payload)
+            });
+
+             if(!response.ok) {
+                console.log(response); 
+                throw new Error(`HTTP error! status: ${response.status}`);
+             }
+
+             const data = await response.json();
+             sent.innerHTML = JSON.stringify(payload, null, 4);
+             received.innerHTML = JSON.stringify(data, null, 4);
+             output.innerHTML += `<br><strong>Response from log service</strong>: ${data.message}`
+            } catch (error) {
+                console.error('Fetch error:', error);
+                output.innerHTML += `<br><br>Error: ${error.message}`;
+            }
+        })
+        
         authBrokerBtn.addEventListener("click", async function() {
         const payload = {
             action: "auth",
