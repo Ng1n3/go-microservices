@@ -10,7 +10,7 @@ import (
 type jsonReponse struct {
 	Error   bool   `json:"error"`
 	Message string `json:"message"`
-	Data    any    `json"data,omitempty"`
+	Data    any    `json:"data,omitempty"`
 }
 
 type RequestPayload struct {
@@ -63,7 +63,7 @@ func (app *Config) HandleSubmission(w http.ResponseWriter, r *http.Request) {
 func (app *Config) logItem(w http.ResponseWriter, entry LogPayload) {
 	jsonData, _ := json.MarshalIndent(entry, "", "\t")
 
-	logServiceURL := "http://logger-service/log"
+	logServiceURL := "http://logger-service:3000/log"
 
 	request, err := http.NewRequest("POST", logServiceURL, bytes.NewBuffer(jsonData))
 	if err != nil {
@@ -82,7 +82,7 @@ func (app *Config) logItem(w http.ResponseWriter, entry LogPayload) {
 
 	defer response.Body.Close()
 
-	if response.StatusCode != http.StatusOK {
+	if response.StatusCode != http.StatusAccepted {
 		app.errorJSON(w, err)
 		return
 	}
