@@ -22,7 +22,7 @@ const (
 var client *mongo.Client
 
 type Config struct {
-  Models data.Models
+	Models data.Models
 }
 
 func main() {
@@ -45,16 +45,24 @@ func main() {
 		}
 	}()
 
-  app := Config{
-    Models: data.New(client),
-  }
+	app := Config{
+		Models: data.New(client),
+	}
+
+  //start web server
+  go app.serve()
 }
 
 func (app *Config) serve() {
-  srv := &http.Server{
-    Addr: fmt.Sprintf(":%s", webPort),
-    
-  }
+	srv := &http.Server{
+		Addr:    fmt.Sprintf(":%s", webPort),
+		Handler: app.routes(),
+	}
+
+	err := srv.ListenAndServe()
+	if err != nil {
+		log.Panic()
+	}
 }
 
 func connectToMongo() (*mongo.Client, error) {
