@@ -5,3 +5,4 @@ authApp
 projects/db-data
 loggerServiceApp
 mailerServiceApp
+listenerApp
