@@ -3,6 +3,8 @@ package main
 import (
 	"bytes"
 	"html/template"
+	"os"
+	"path/filepath"
 	"time"
 
 	"github.com/vanng822/go-premailer/premailer"
@@ -51,9 +53,9 @@ func (m *Mail) SendSMTPMessage(msg Message) error {
 	}
 
 	plainMessasge, err := m.buildPlainTextMessage(msg)
-  if err != nil {
-    return err
-  }
+	if err != nil {
+		return err
+	}
 
 	server := mail.NewSMTPClient()
 	server.Host = m.Host
@@ -90,7 +92,10 @@ func (m *Mail) SendSMTPMessage(msg Message) error {
 }
 
 func (m *Mail) buildHTMLMessage(msg Message) (string, error) {
-	templateToRender := "./templates/mail.html.gohtml"
+	templateToRender, err := getTemplatePath("mail.html.gohtml")
+	if err != nil {
+		return "", err
+	}
 
 	t, err := template.New("email-html").ParseFiles(templateToRender)
 	if err != nil {
@@ -112,7 +117,10 @@ func (m *Mail) buildHTMLMessage(msg Message) (string, error) {
 }
 
 func (m *Mail) buildPlainTextMessage(msg Message) (string, error) {
-	templateToRender := "./templates/mail.plain.gohtml"
+	templateToRender, err := getTemplatePath("mail.plain.gohtml")
+	if err != nil {
+		return "", err
+	}
 
 	t, err := template.New("email-plain").ParseFiles(templateToRender)
 	if err != nil {
@@ -160,4 +168,13 @@ func (m *Mail) getEncryption(s string) mail.Encryption {
 	default:
 		return mail.EncryptionSTARTTLS
 	}
+}
+
+func getTemplatePath(filename string) (string, error) {
+	dir, err := os.Getwd()
+	if err != nil {
+		return "", err
+	}
+
+	return filepath.Join(dir, "templates", filename), nil
 }
