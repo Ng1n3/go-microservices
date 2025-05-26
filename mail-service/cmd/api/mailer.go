@@ -51,6 +51,9 @@ func (m *Mail) SendSMTPMessage(msg Message) error {
 	}
 
 	plainMessasge, err := m.buildPlainTextMessage(msg)
+  if err != nil {
+    return err
+  }
 
 	server := mail.NewSMTPClient()
 	server.Host = m.Host
