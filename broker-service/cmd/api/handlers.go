@@ -305,3 +305,4 @@ func (app *Config) LogViaGRPC(w http.ResponseWriter, r *http.Request) {
 	app.writeJSON(w, http.StatusAccepted, payload)
 
 }
+
