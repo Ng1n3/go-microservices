@@ -1,6 +1,18 @@
 version: '3'
 
 services:
+  caddy:
+    image: n61n3/micro-cady:1.0.0
+    deploy:
+      mode: replicated
+      replicas: 1
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - caddy_data:/data
+      - caddy_config/config
+
   front-end:
     iamge: n61n3/frontend:1.0.0
   deploy: replicated
@@ -88,3 +100,9 @@ services:
       POSTGRES_DB: users
     volumes:
       - ./db-data/postgres/:/var/lib/postgresql/data/
+
+
+volumes:
+  caddy_data:
+    external: true
+  caddy_config:
