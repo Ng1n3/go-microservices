@@ -1,6 +1,11 @@
 version: '3'
 
 services:
+  front-end:
+    iamge: n61n3/frontend:1.0.0
+  deploy: replicated
+  replicas: 1
+
   broker-service:
     image: n61n3/broker-service:1.0.1
     deploy:
