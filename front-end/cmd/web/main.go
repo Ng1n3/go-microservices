@@ -10,7 +10,14 @@ import (
 
 func main() {
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+		log.Println("home endpoint hit")
 		render(w, "test.page.gohtml")
+	})
+
+	http.HandleFunc("/health", func(w http.ResponseWriter, r *http.Request) {
+		log.Println("Health endpoint hit")
+		w.WriteHeader(http.StatusOK)
+		w.Write([]byte("OK"))
 	})
 
 	fmt.Println("Starting front end service on port 8081")
@@ -20,7 +27,7 @@ func main() {
 	}
 }
 
-// go:embed templates
+//go:embed templates
 var templateFS embed.FS
 
 func render(w http.ResponseWriter, t string) {

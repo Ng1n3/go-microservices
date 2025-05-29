@@ -2,21 +2,22 @@ version: '3'
 
 services:
   caddy:
-    image: n61n3/micro-cady:1.0.0
+    image: n61n3/micro-caddy:1.0.5
     deploy:
       mode: replicated
       replicas: 1
     ports:
-      - "80:80"
-      - "443:443"
+      - '80:80'
+      - '443:443'
     volumes:
       - caddy_data:/data
-      - caddy_config/config
+      - caddy_config:/config
 
   front-end:
-    iamge: n61n3/frontend:1.0.0
-  deploy: replicated
-  replicas: 1
+    image: n61n3/frontend:1.0.4
+    deploy:
+      mode: replicated
+      replicas: 1
 
   broker-service:
     image: n61n3/broker-service:1.0.1
@@ -36,7 +37,7 @@ services:
       mode: replicated
       replicas: 1
     environment:
-      DSN: "host=postgres port=5432 user=postgres password=password dbname=users sslmode=disable timezone=UTC connect_timeout=5"
+      DSN: 'host=postgres port=5432 user=postgres password=password dbname=users sslmode=disable timezone=UTC connect_timeout=5'
 
   logger-service:
     image: n61n3/logger-service:1.0.0
@@ -53,30 +54,28 @@ services:
       MAIL_DOMAIN: localhost
       MAIL_HOST: mailhog
       MAIL_PORT: 1025
-      MAIL_USERNAME: ""
-      MAIL_PASSWORD: ""
+      MAIL_USERNAME: ''
+      MAIL_PASSWORD: ''
       MAIL_ENCRYPTION: none
       FROM_ADDR: 'muyiwa@test.com'
       FROM_NAME: 'Muyiwa Dev'
-    depends_on:
-      - mailhog
 
   rabbitmq:
     image: 'rabbitmq:3.9-alpine'
     deploy:
       mode: global
 
-  mailhod:
+  mailhog:
     image: 'mailhog/mailhog:latest'
     ports:
-      - "8025:8025"
+      - '8025:8025'
     deploy:
       mode: global
-  
+
   mongo:
     image: 'mongo:6.0'
     ports:
-    - "27017:27017"
+      - '27017:27017'
     deploy:
       mode: global
     environment:
@@ -85,12 +84,11 @@ services:
       MONGO_INITDB_ROOT_PASSWORD: password
     volumes:
       - ./db-data/mongo:/data/db
-  
+
   postgres:
     image: 'postgres:14.0'
     ports:
-      - '5433:5432'
-    restart: always
+      - '5432:5432'
     deploy:
       mode: replicated
       replicas: 1
@@ -99,8 +97,7 @@ services:
       POSTGRES_PASSWORD: password
       POSTGRES_DB: users
     volumes:
-      - ./db-data/postgres/:/var/lib/postgresql/data/
-
+      - ./db-data/postgres:/var/lib/postgresql/data/
 
 volumes:
   caddy_data:
