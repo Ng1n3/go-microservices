@@ -2,7 +2,7 @@ version: '3'
 
 services:
   caddy:
-    image: n61n3/micro-caddy:1.0.5
+    image: n61n3/micro-caddy-production:1.0.0
     deploy:
       mode: replicated
       replicas: 1
