@@ -22,7 +22,7 @@ services:
       mode: replicated
       replicas: 1
     environment:
-      BROKER_URL: "http://broker.notepod.xyz"
+      BROKER_URL: "https://broker.notepod.xyz"
 
   broker-service:
     image: n61n3/broker-service:1.0.1
