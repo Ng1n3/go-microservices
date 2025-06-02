@@ -21,8 +21,8 @@ func main() {
 		w.Write([]byte("OK"))
 	})
 
-	fmt.Println("Starting front end service on port 8081")
-	err := http.ListenAndServe("0.0.0.0:8081", nil)
+	fmt.Println("Starting front end service on port 80")
+	err := http.ListenAndServe("0.0.0.0:80", nil)
 	if err != nil {
 		log.Panic(err)
 	}
